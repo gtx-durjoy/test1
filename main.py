@@ -1,27 +1,20 @@
-import os
-import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-TOKEN = os.getenv("BOT_TOKEN")
-if not TOKEN:
-    logger.error("❌ BOT_TOKEN not set in Environment Variables")
-    exit()
-
+BOT_TOKEN = "8378713809:AAGvsWfDoQmPqUjBjKopzzyyFA-OvbSYxI4"
 def start(update, context):
-    update.message.reply_text("🚀 Hosting Test Bot is Running!")
+    update.message.reply_text("🤖 DurjoyTestBot Activated!\nSend me anything & I will repeat.")
 
-def echo(update, context):
-    update.message.reply_text(update.message.text)
+def reply(update, context):
+    text = update.message.text
+    update.message.reply_text(f"Echo: {text}")
 
 def main():
-    updater = Updater(TOKEN, use_context=True)
+    updater = Updater(BOT_TOKEN, use_context=True)
     dp = updater.dispatcher
+
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text, echo))
-    logger.info("Bot is Running...")
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, reply))
+
     updater.start_polling()
     updater.idle()
 
